@@ -869,6 +869,7 @@ class slice(object):
 
 class tuple(Sequence[_T_co], Generic[_T_co]):
     def __new__(cls: Type[_T], iterable: Iterable[_T_co] = ...) -> _T: ...
+    def __init__(self, iterable: Iterable[_T_co] = ...): ...
     def __len__(self) -> int: ...
     def __contains__(self, x: object) -> bool: ...
     @overload
@@ -891,15 +892,6 @@ class tuple(Sequence[_T_co], Generic[_T_co]):
         def index(self, x: Any, start: int = ..., end: int = ...) -> int: ...
     else:
         def index(self, x: Any) -> int: ...
-
-class function:
-    # TODO not defined in builtins!
-    __name__: str
-    __module__: str
-    __code__: CodeType
-    if sys.version_info >= (3,):
-        __qualname__: str
-        __annotations__: Dict[str, Any]
 
 class list(MutableSequence[_T], Generic[_T]):
     @overload
