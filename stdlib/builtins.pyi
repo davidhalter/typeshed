@@ -72,7 +72,7 @@ from typing_extensions import (  # noqa: Y023
     TypeIs,
     TypeVarTuple,
     deprecated,
-    disjoint_base,
+#    disjoint_base,
 )
 
 if sys.version_info >= (3, 14):
@@ -1045,9 +1045,9 @@ class tuple(Sequence[_T_co]):
     def __len__(self) -> int: ...
     def __contains__(self, key: object, /) -> bool: ...
     @overload
-    def __getitem__(self, key: SupportsIndex, /) -> _T_co: ...
+    def __getitem__(self, key: int, /) -> _T_co: ...
     @overload
-    def __getitem__(self, key: slice[SupportsIndex | None], /) -> tuple[_T_co, ...]: ...
+    def __getitem__(self, key: slice[int | None], /) -> tuple[_T_co, ...]: ...
     def __iter__(self) -> Iterator[_T_co]: ...
     def __lt__(self, value: tuple[_T_co, ...], /) -> bool: ...
     def __le__(self, value: tuple[_T_co, ...], /) -> bool: ...
@@ -1064,57 +1064,6 @@ class tuple(Sequence[_T_co]):
     def count(self, value: Any, /) -> int: ...
     def index(self, value: Any, start: SupportsIndex = 0, stop: SupportsIndex = sys.maxsize, /) -> int: ...
     def __class_getitem__(cls, item: Any, /) -> GenericAlias: ...
-
-# Doesn't exist at runtime, but deleting this breaks mypy and pyright. See:
-# https://github.com/python/typeshed/issues/7580
-# https://github.com/python/mypy/issues/8240
-# Obsolete, use types.FunctionType instead.
-@final
-@type_check_only
-class function:
-    # Make sure this class definition stays roughly in line with `types.FunctionType`
-    @property
-    def __closure__(self) -> tuple[CellType, ...] | None: ...
-    __code__: CodeType
-    __defaults__: tuple[Any, ...] | None
-    __dict__: dict[str, Any]
-    @property
-    def __globals__(self) -> dict[str, Any]: ...
-    __name__: str
-    __qualname__: str
-    __annotations__: dict[str, AnnotationForm]
-    if sys.version_info >= (3, 14):
-        __annotate__: AnnotateFunc | None
-    __kwdefaults__: dict[str, Any] | None
-    if sys.version_info >= (3, 10):
-        @property
-        def __builtins__(self) -> dict[str, Any]: ...
-    if sys.version_info >= (3, 12):
-        __type_params__: tuple[TypeVar | ParamSpec | TypeVarTuple, ...]
-
-    __module__: str
-    if sys.version_info >= (3, 13):
-        def __new__(
-            cls,
-            code: CodeType,
-            globals: dict[str, Any],
-            name: str | None = None,
-            argdefs: tuple[object, ...] | None = None,
-            closure: tuple[CellType, ...] | None = None,
-            kwdefaults: dict[str, object] | None = None,
-        ) -> Self: ...
-    else:
-        def __new__(
-            cls,
-            code: CodeType,
-            globals: dict[str, Any],
-            name: str | None = None,
-            argdefs: tuple[object, ...] | None = None,
-            closure: tuple[CellType, ...] | None = None,
-        ) -> Self: ...
-
-    # mypy uses `builtins.function.__get__` to represent methods, properties, and getset_descriptors so we type the return as Any.
-    def __get__(self, instance: object, owner: type | None = None, /) -> Any: ...
 
 @disjoint_base
 class list(MutableSequence[_T]):
@@ -1145,9 +1094,9 @@ class list(MutableSequence[_T]):
     def __iter__(self) -> Iterator[_T]: ...
     __hash__: ClassVar[None]  # type: ignore[assignment]
     @overload
-    def __getitem__(self, i: SupportsIndex, /) -> _T: ...
+    def __getitem__(self, i: int, /) -> _T: ...
     @overload
-    def __getitem__(self, s: slice[SupportsIndex | None], /) -> list[_T]: ...
+    def __getitem__(self, s: slice[int | None], /) -> list[_T]: ...
     @overload
     def __setitem__(self, key: SupportsIndex, value: _T, /) -> None: ...
     @overload
@@ -1178,13 +1127,13 @@ class dict(MutableMapping[_KT, _VT]):
     @overload
     def __init__(self, /) -> None: ...
     @overload
-    def __init__(self: dict[str, _VT], /, **kwargs: _VT) -> None: ...  # pyright: ignore[reportInvalidTypeVarUse]  #11780
+    def __init__(self, /, **kwargs: _VT) -> None: ...
     @overload
-    def __init__(self, map: SupportsKeysAndGetItem[_KT, _VT], /) -> None: ...
+    def __init__(self, map: Mapping[_KT, _VT], /) -> None: ...
     @overload
     def __init__(
-        self: dict[str, _VT],  # pyright: ignore[reportInvalidTypeVarUse]  #11780
-        map: SupportsKeysAndGetItem[str, _VT],
+        self,
+        map: Mapping[str, _VT],
         /,
         **kwargs: _VT,
     ) -> None: ...

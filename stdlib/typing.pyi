@@ -776,7 +776,7 @@ class ValuesView(MappingView, Collection[_VT_co]):
 # but dict and types.MappingProxyType (the vast majority of Mapping types)
 # don't allow keyword arguments.
 
-class Mapping(Collection[_KT], Generic[_KT, _VT_co]):
+class Mapping(Generic[_KT, _VT_co], Collection[_KT]):
     # TODO: We wish the key type could also be covariant, but that doesn't work,
     # see discussion in https://github.com/python/typing/pull/273.
     @abstractmethod

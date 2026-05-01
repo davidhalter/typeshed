@@ -80,7 +80,7 @@ class dict_keys(KeysView[_KT_co], Generic[_KT_co, _VT_co]):  # undocumented
         def mapping(self) -> MappingProxyType[_KT_co, _VT_co]: ...
 
 @final
-class dict_values(ValuesView[_VT_co], Generic[_KT_co, _VT_co]):  # undocumented
+class dict_values(Generic[_KT_co, _VT_co], ValuesView[_VT_co]):  # undocumented
     def __reversed__(self) -> Iterator[_VT_co]: ...
     if sys.version_info >= (3, 10):
         @property
